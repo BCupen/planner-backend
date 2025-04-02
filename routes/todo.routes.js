@@ -41,17 +41,48 @@ todoRouter.get("/", async (req, res) => {
   }
 });
 
+// GET todo by id
 todoRouter.get("/:id", async (req, res) => {
   const id = req.params.id;
   try {
     const todo = await Todo.findById(id);
     console.log(`Todo: ${todo}`);
+    if (!todo) {
+      return res.status(404).json({
+        success: false,
+        message: "Todo not found",
+      });
+    }
     return res.status(200).json(todo);
   } catch (error) {
     console.log(`Error getting todo with id ${id}: ${error.message}`);
     return res.status(500).json({
       success: false,
       message: `Error getting todo with id ${id}: ${error.message}`,
+    });
+  }
+});
+
+todoRouter.delete("/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const todo = await Todo.findByIdAndDelete(id);
+    console.log(`Todo deleted: ${todo}`);
+    if (!todo) {
+      return res.status(404).json({
+        success: false,
+        message: "Todo not found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      message: "Todo successfull deleted",
+    });
+  } catch (error) {
+    console.log(`Error deleting todo: ${error.message}`);
+    return res.status(500).json({
+      success: false,
+      message: "Error deleting todo",
     });
   }
 });
