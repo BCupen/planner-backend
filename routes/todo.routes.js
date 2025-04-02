@@ -63,6 +63,7 @@ todoRouter.get("/:id", async (req, res) => {
   }
 });
 
+// DELETE todo by id
 todoRouter.delete("/:id", async (req, res) => {
   const id = req.params.id;
   try {
@@ -87,4 +88,29 @@ todoRouter.delete("/:id", async (req, res) => {
   }
 });
 
+// PATCH todo
+todoRouter.patch("/:id", async (req, res) => {
+  const id = req.params.id;
+  const updatedTodo = req.body;
+  try {
+    const newTodo = await Todo.findByIdAndUpdate(id, updatedTodo, {
+      new: true,
+      runValidators: true,
+    });
+    if (!newTodo) {
+      return res.status(404).json({
+        success: true,
+        error: "Todo not found",
+      });
+    }
+    console.log(`Todo updated: ${newTodo}`);
+    return res.status(200).json(newTodo);
+  } catch (error) {
+    console.log(`Error updating todo: ${error.message}`);
+    return res.status(500).json({
+      success: false,
+      message: "Error updating todo",
+    });
+  }
+});
 export default todoRouter;
