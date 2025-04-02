@@ -41,4 +41,19 @@ todoRouter.get("/", async (req, res) => {
   }
 });
 
+todoRouter.get("/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const todo = await Todo.findById(id);
+    console.log(`Todo: ${todo}`);
+    return res.status(200).json(todo);
+  } catch (error) {
+    console.log(`Error getting todo with id ${id}: ${error.message}`);
+    return res.status(500).json({
+      success: false,
+      message: `Error getting todo with id ${id}: ${error.message}`,
+    });
+  }
+});
+
 export default todoRouter;
