@@ -1,31 +1,39 @@
 import mongoose, { mongo } from "mongoose";
 import Priority from "../types/PriorityEnum.js";
 
-const todoSchema = new mongoose.Schema({
+const todoSchema = new mongoose.Schema(
+  {
     title: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     description: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     completed: {
-        type: Boolean,
-        default: false
+      type: Boolean,
+      default: false,
     },
     priority: {
-        type: String,
-        enum: Object.values(Priority),
-        required: true       
+      type: String,
+      enum: Object.values(Priority),
+      required: true,
     },
     dueDate: {
-        type: String,
-        required: true
-    }
-}, {
-    timestamps: true
-});
+      type: String,
+      required: true,
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
 
 const Todo = mongoose.model("Todo", todoSchema);
 

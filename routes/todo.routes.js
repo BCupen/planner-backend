@@ -1,11 +1,18 @@
 import express from "express";
 import Todo from "../models/todo.model.js";
+import authMiddleware from "../middleware/auth.middleware.js";
 
 const todoRouter = express.Router();
 
+todoRouter.use(authMiddleware);
+
 // POST new todo
 todoRouter.post("/", async (req, res) => {
-  const todo = req.body;
+  console.log(`req.user: ${req.user}`);
+  const todo = new Todo({
+    ...req.body,
+    user: req.user._id,
+  });
 
   if (!todo.title || !todo.description || !todo.priority || !todo.dueDate) {
     return res.status(400).json({ success: false, message: "Missing fields" });
